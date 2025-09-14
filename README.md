@@ -1,2 +1,156 @@
-# mi princesa-
-Feliz cumpleaños 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🎂 Feliz Cumpleaños Amor 💖</title>
+<style>
+  body{
+    margin:0;
+    height:100vh;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,#ffdde1,#ee9ca7);
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+  }
+  .card{
+    background:rgba(255,255,255,0.9);
+    border-radius:20px;
+    padding:20px;
+    text-align:center;
+    max-width:700px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    position:relative;
+    z-index:1;
+  }
+  .card h1{color:#ff4b6e;font-size:36px;margin-bottom:10px;}
+  .card p{font-size:18px;color:#444;}
+  .card img{
+    width:100%;
+    max-width:300px;
+    border-radius:15px;
+    margin:15px 0;
+    box-shadow:0 6px 15px rgba(0,0,0,0.2);
+    cursor:pointer; /* Indica que se puede clicar */
+  }
+
+  .heart{
+    position:absolute;
+    width:20px;
+    height:20px;
+    background:#ff0000;
+    transform:rotate(-45deg);
+    animation: floatUp 8s linear infinite;
+    opacity:0.9;
+    z-index:3;
+  }
+  .heart:before,
+  .heart:after{
+    content:"";
+    position:absolute;
+    width:20px;
+    height:20px;
+    background:#ff0000;
+    border-radius:50%;
+  }
+  .heart:before{top:-10px;left:0;}
+  .heart:after{top:0;left:10px;}
+  @keyframes floatUp{
+    0%{transform:translateY(0) rotate(-45deg);opacity:0;}
+    10%{opacity:1;}
+    100%{transform:translateY(-100vh) rotate(-45deg);opacity:0;}
+  }
+
+  canvas{
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    pointer-events:none;
+    z-index:2;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="card">
+  <h1>🎉 ¡Feliz Cumpleaños, mi amor! 🎉</h1>
+  <img id="playImage" src="mifoto.jpg" alt="Mi amor">
+  <p>
+    Hoy celebro tu vida, tu sonrisa y la dicha de tenerte a mi lado.  
+    Eres mi felicidad y mi razón de sonreír cada día. Te amo mucho 😍🥰 💖
+  </p>
+</div>
+
+<!-- Audio -->
+<audio id="birthdayAudio" loop>
+  <source src="las_mananitas.mp3" type="audio/mpeg">
+  Tu navegador no soporta el audio.
+</audio>
+
+<script>
+/* reproducir audio al click en la imagen */
+const audio = document.getElementById("birthdayAudio");
+document.getElementById("playImage").addEventListener("click", () => {
+  audio.play();
+});
+
+/* generar corazones aleatorios */
+function createHeart(){
+  const heart=document.createElement("div");
+  heart.className="heart";
+  heart.style.left=Math.random()*100+"vw";
+  heart.style.animationDuration=(5+Math.random()*5)+"s";
+  document.body.appendChild(heart);
+  setTimeout(()=>heart.remove(),10000);
+}
+setInterval(createHeart,600);
+
+/* confeti */
+const canvas=document.getElementById("confetti");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+window.addEventListener("resize",()=>{
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+});
+
+function ConfettiPiece(){
+  this.x=Math.random()*canvas.width;
+  this.y=Math.random()*canvas.height - canvas.height;
+  this.size=5+Math.random()*5;
+  this.speed=2+Math.random()*3;
+  this.color=["#ff0000","#ff4b6e","#ffd6e0","#ff7b95"][Math.floor(Math.random()*4)];
+}
+ConfettiPiece.prototype.update=function(){
+  this.y+=this.speed;
+  if(this.y>canvas.height){
+    this.y=0-this.size;
+    this.x=Math.random()*canvas.width;
+  }
+}
+ConfettiPiece.prototype.draw=function(){
+  ctx.fillStyle=this.color;
+  ctx.fillRect(this.x,this.y,this.size,this.size);
+}
+
+let confetti=[];
+for(let i=0;i<150;i++){ confetti.push(new ConfettiPiece()); }
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  confetti.forEach(c=>{
+    c.update();
+    c.draw();
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+</body>
+</html>
